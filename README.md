@@ -15,5 +15,5 @@ Some Features:
 -   📷 Image Uploads using Cloudinary
 -   🔔 Send Notifications
 -   🌐 Deployment
-- 
+ 
 

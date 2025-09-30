@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 import XSvg from "../../../components/svgs/X";
+import {URL} from "../../../url";
 
 import { MdOutlineMail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
@@ -23,7 +24,7 @@ const SignUpPage = () => {
 	const { mutate, isError, isPending, error } = useMutation({
 		mutationFn: async ({ email, username, fullName, password }) => {
 			try {
-				const res = await fetch("/api/auth/signup", {
+				const res = await fetch( URL + "/api/auth/signup", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

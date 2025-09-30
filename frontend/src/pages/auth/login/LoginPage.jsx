@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import XSvg from "../../../components/svgs/X";
-
+import {URL} from "../../../url";
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 
@@ -23,7 +23,7 @@ const LoginPage = () => {
 	} = useMutation({
 		mutationFn: async ({ username, password }) => {
 			try {
-				const res = await fetch("/api/auth/login", {
+				const res = await fetch( URL + "/api/auth/login", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

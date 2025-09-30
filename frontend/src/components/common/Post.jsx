@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date";
+import { URL } from "../../url";
 
 const Post = ({ post }) => {
 	const [comment, setComment] = useState("");
@@ -25,8 +26,9 @@ const Post = ({ post }) => {
 	const { mutate: deletePost, isPending: isDeleting } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await fetch(`/api/posts/${post._id}`, {
+				const res = await fetch(URL + `/api/posts/${post._id}`, {
 					method: "DELETE",
+					credentials: "include",
 				});
 				const data = await res.json();
 
@@ -47,8 +49,9 @@ const Post = ({ post }) => {
 	const { mutate: likePost, isPending: isLiking } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await fetch(`/api/posts/like/${post._id}`, {
+				const res = await fetch(URL + `/api/posts/like/${post._id}`, {
 					method: "POST",
+					credentials: "include",
 				});
 				const data = await res.json();
 				if (!res.ok) {
@@ -81,11 +84,12 @@ const Post = ({ post }) => {
 	const { mutate: commentPost, isPending: isCommenting } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await fetch(`/api/posts/comment/${post._id}`, {
+				const res = await fetch(URL + `/api/posts/comment/${post._id}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
+					credentials: "include",
 					body: JSON.stringify({ text: comment }),
 				});
 				const data = await res.json();
@@ -202,51 +206,51 @@ const Post = ({ post }) => {
 												</div>
 											</div>
 										))}
+										<form
+											className='flex gap-2 items-center mt-4 border-t border-gray-600 pt-2'
+											onSubmit={handlePostComment}
+										>
+											<textarea
+												className='textarea w-full p-1 rounded text-md resize-none border focus:outline-none  border-gray-800'
+												placeholder='Add a comment...'
+												value={comment}
+												onChange={(e) => setComment(e.target.value)}
+											/>
+											<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
+												{isCommenting ? <LoadingSpinner size='md' /> : "Post"}
+											</button>
+										</form>
 									</div>
-									<form
-										className='flex gap-2 items-center mt-4 border-t border-gray-600 pt-2'
-										onSubmit={handlePostComment}
-									>
-										<textarea
-											className='textarea w-full p-1 rounded text-md resize-none border focus:outline-none  border-gray-800'
-											placeholder='Add a comment...'
-											value={comment}
-											onChange={(e) => setComment(e.target.value)}
-										/>
-										<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
-											{isCommenting ? <LoadingSpinner size='md' /> : "Post"}
-										</button>
+									<form method='dialog' className='modal-backdrop'>
+										<button className='outline-none'>close</button>
 									</form>
 								</div>
-								<form method='dialog' className='modal-backdrop'>
-									<button className='outline-none'>close</button>
-								</form>
 							</dialog>
-							<div className='flex gap-1 items-center group cursor-pointer'>
-								<BiRepost className='w-6 h-6  text-slate-500 group-hover:text-green-500' />
-								<span className='text-sm text-slate-500 group-hover:text-green-500'>0</span>
-							</div>
-							<div className='flex gap-1 items-center group cursor-pointer' onClick={handleLikePost}>
-								{isLiking && <LoadingSpinner size='sm' />}
-								{!isLiked && !isLiking && (
-									<FaRegHeart className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500' />
-								)}
-								{isLiked && !isLiking && (
-									<FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />
-								)}
+						</div>
+						<div className='flex gap-1 items-center group cursor-pointer'>
+							<BiRepost className='w-6 h-6  text-slate-500 group-hover:text-green-500' />
+							<span className='text-sm text-slate-500 group-hover:text-green-500'>0</span>
+						</div>
+						<div className='flex gap-1 items-center group cursor-pointer' onClick={handleLikePost}>
+							{isLiking && <LoadingSpinner size='sm' />}
+							{!isLiked && !isLiking && (
+								<FaRegHeart className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500' />
+							)}
+							{isLiked && !isLiking && (
+								<FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />
+							)}
 
-								<span
-									className={`text-sm  group-hover:text-pink-500 ${
-										isLiked ? "text-pink-500" : "text-slate-500"
-									}`}
-								>
-									{post.likes.length}
-								</span>
-							</div>
+							<span
+								className={`text-sm  group-hover:text-pink-500 ${
+									isLiked ? "text-pink-500" : "text-slate-500"
+								}`}
+							>
+								{post.likes.length}
+							</span>
 						</div>
-						<div className='flex w-1/3 justify-end gap-2 items-center'>
-							<FaRegBookmark className='w-4 h-4 text-slate-500 cursor-pointer' />
-						</div>
+					</div>
+					<div className='flex w-1/3 justify-end gap-2 items-center'>
+						<FaRegBookmark className='w-4 h-4 text-slate-500 cursor-pointer' />
 					</div>
 				</div>
 			</div>
